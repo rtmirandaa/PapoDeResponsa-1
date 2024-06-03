@@ -1,41 +1,59 @@
 <?php
-$server = "localhost";
+$server = "monorail.proxy.rlwy.net";
 $userDb = "root";
-$passDb = "";
-$nameDb = "papo_de_responsa";
-//conexão com o Banco de Dados
-$connect = mysqli_connect($server, $userDb, $passDb, $nameDb);
+$passDb = "ZshcFSCqLRLagZEWrMkPzpshPNBIawAn";
+$nameDb = "railway";
+$port = 37268;
+
+// Conexão com o Banco de Dados
+$connect = mysqli_connect($server, $userDb, $passDb, $nameDb, $port);
+
+// Verificar conexão
+if (!$connect) {
+    die("Falha na conexão: " . mysqli_connect_error());
+}
 
 // Função para realizar o login
 function login($connect)
 {
-	if (isset($_POST['acessar'])) {
-		$check_email = filter_input(INPUT_POST, 'email_multiplicador', FILTER_VALIDATE_EMAIL);
-		$email = mysqli_real_escape_string($connect, $check_email);
-		$senha = mysqli_real_escape_string($connect, $_POST['senha_multiplicador']);
+    if (isset($_POST['acessar'])) {
+        $check_email = filter_input(INPUT_POST, 'email_multiplicador', FILTER_VALIDATE_EMAIL);
+        if ($check_email === false) {
+            echo '<label style="color: red; font-size: 2rem;">E-mail inválido!</label>';
+            return;
+        }
+        $email = mysqli_real_escape_string($connect, $check_email);
+        $senha = mysqli_real_escape_string($connect, $_POST['senha_multiplicador']);
 
-		if (!empty($email) and !empty($senha)) {
-			$query = "SELECT * FROM multiplicador WHERE email_multiplicador = '$email' AND senha_multiplicador = '$senha' ";
-			$executar = mysqli_query($connect, $query);
-			$verifica = mysqli_num_rows($executar);
-			$usuario = mysqli_fetch_assoc($executar);
-			if ($verifica > 0) {
-				// Inicia uma sessão (login)
-				session_start();
-				$_SESSION['email_multiplicador'] = $usuario['email_multiplicador'];
-				$_SESSION['nome_multiplicador'] = $usuario['nome_multiplicador'];
-				$_SESSION['id'] = $usuario['id'];
-				$_SESSION['ativa'] = true;
-				header("location: index.php"); // Redireciona para a página de administração
-			} else {
-				$mensagem = "E-mail ou senha não encontrados!";
-				echo '<label style="color: red; font-size: 2rem;">' . $mensagem . '</label>';
-			}
-		} else {
-			$mensagem = "E-mail ou senha incorretos!";
-			echo '<label style="color: red; font-size: 2rem;">' . $mensagem . '</label>';
-		}
-	}
+        if (!empty($email) && !empty($senha)) {
+            $query = "SELECT * FROM multiplicador WHERE email_multiplicador = '$email' AND senha_multiplicador = '$senha'";
+            $executar = mysqli_query($connect, $query);
+
+            if (!$executar) {
+                // Erro ao executar a consulta
+                echo '<label style="color: red; font-size: 2rem;">Erro ao executar a consulta: ' . mysqli_error($connect) . '</label>';
+                return;
+            }
+
+            $verifica = mysqli_num_rows($executar);
+            $usuario = mysqli_fetch_assoc($executar);
+
+            if ($verifica > 0) {
+                // Inicia uma sessão (login)
+                session_start();
+                $_SESSION['email_multiplicador'] = $usuario['email_multiplicador'];
+                $_SESSION['nome_multiplicador'] = $usuario['nome_multiplicador'];
+                $_SESSION['id'] = $usuario['id'];
+                $_SESSION['ativa'] = true;
+                header("location: index.php"); // Redireciona para a página de administração
+                exit;
+            } else {
+                echo '<label style="color: red; font-size: 2rem;">E-mail ou senha não encontrados!</label>';
+            }
+        } else {
+            echo '<label style="color: red; font-size: 2rem;">E-mail ou senha incorretos!</label>';
+        }
+    }
 }
 
 // Função para deslogar
