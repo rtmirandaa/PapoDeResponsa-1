@@ -111,13 +111,28 @@ function logout()
 }
 
 // Função para buscar um usuário específico
-function buscaUnica($connect, $tabela, $id)
-{
-	$query = "SELECT * FROM multiplicador where idMultiplicador =" . (int) $id;
-	$execute = mysqli_query($connect, $query);
-	$result = mysqli_fetch_assoc($execute);
-	return $result;
+function buscaUnica($connect, $tabela, $id) {
+    // Monta a consulta SQL
+    $query = "SELECT * FROM $tabela WHERE id_Multiplicador = " . (int)$id;
+
+    // Executa a consulta
+    $execute = mysqli_query($connect, $query);
+
+    // Verifica se a consulta foi bem-sucedida
+    if ($execute === false) {
+        die("Erro na consulta: " . mysqli_error($connect));
+    }
+
+    // Verifica se há resultados
+    if (mysqli_num_rows($execute) > 0) {
+        // Retorna o resultado como um array associativo
+        return mysqli_fetch_assoc($execute);
+    } else {
+        // Retorna null se não houver resultados
+        return null;
+    }
 }
+
 
 // Função para buscar todos os usuários
 function buscar($connect, $tabela, $where = 1, $order = "")
@@ -181,6 +196,70 @@ function inserirMultiplicador($connect)
 		}
 	}
 }
+
+function updateMultiplicador($connect)
+{
+	if (isset($_POST['atualizar']) and !empty($_POST['email_multiplicador'])) {
+		$erros = array();
+		$id_multiplicador = filter_input(INPUT_POST, "id_multiplicador", FILTER_VALIDATE_INT);
+		$email_multiplicador = filter_input(INPUT_POST, 'email_multiplicador', FILTER_VALIDATE_EMAIL);
+		$nome = mysqli_real_escape_string($connect, $_POST['nome_multiplicador']);
+		$matricula = mysqli_real_escape_string($connect, $_POST['matricula']);
+		$senha = "";
+
+		if (strlen($nome) < 3) {
+			$erros[] = "Nome muito curto";
+		}
+
+		if (empty($email_multiplicador)) {
+			$erros[] = "Preencha seu e-mail corretamente";
+		}
+
+		if (!empty($_POST['senha_multiplicador'])) {
+			if ($_POST['senha_multiplicador'] == $_POST['repetesenha']) {
+				$senha = ($_POST['senha_multiplicador']);
+			} else {
+				$erros[] = "Senhas não conferem";
+			}
+		}
+
+		// Verificar se não mudou o email
+		$queryEmailAtual = "SELECT email_multiplicador FROM multiplicador where id_multiplicador = $id_multiplicador ";
+		$buscaEmailAtual = mysqli_query($connect, $queryEmailAtual);
+		$retornoEmail = mysqli_fetch_assoc($buscaEmailAtual);
+		$queryEmail = "SELECT email_multiplicador FROM multiplicador WHERE email_multiplicador = '$email_multiplicador' AND  email_multiplicador <> '" . $retornoEmail['email_multiplicador'] . "'";
+		$buscaEmail = mysqli_query($connect, $queryEmail);
+		$verifica = mysqli_num_rows($buscaEmail); # traz número de linhas
+		if (!empty($verifica)) {
+			$erros[] = "E-mail já cadastrado!";
+		}
+
+		if (empty($erros)) {
+			if (!empty($senha)) {
+				$query = "UPDATE multiplicador set nome_multiplicador = '$nome', matricula = '$matricula', email_multiplicador = '$email_multiplicador', senha_multiplicador = '$senha' 
+			where id_multiplicador =" . (int) $id_multiplicador;
+			} else {
+				$query = "UPDATE multiplicador set nome_multiplicador = '$nome', matricula = '$matricula', email_multiplicador = '$email_multiplicador'
+			where id_multiplicador =" . (int) $id_multiplicador;
+			}
+
+			$executar = mysqli_query($connect, $query);
+			if ($executar) {
+			    "Usuário atualizado com sucesso!";
+                header("Location: multiplicadores.php");
+                exit(); // Certifique-se de que o script pare de ser executado após o redirecionamento
+			} else {
+				echo "Erro ao atualizar usuário: " . mysqli_error($connect);
+			}
+		} else {
+			foreach ($erros as $erro) {
+				echo "<p>$erro</p>";
+			}
+		}
+	}
+}
+
+
 
 // Função para deletar um usuário
 function deletar($connect, $usuario, $id_multiplicador)

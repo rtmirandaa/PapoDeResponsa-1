@@ -1,4 +1,6 @@
 <?php session_start(); 
+// Verifica se a sessão está ativa. 
+// Se 'ativa' está definida na sessão, $seguranca é TRUE, caso contrário, redireciona para 'index.php'
 $seguranca = isset($_SESSION['ativa']) ? TRUE : header("location:index.php");
 require_once "functions.php";
 ?>
@@ -11,8 +13,8 @@ require_once "functions.php";
     <title>Painel admin - multiplicadores</title>
 </head>
 <body>
+    <!-- Se $seguranca é TRUE, exibe o conteúdo protegido -->
     <?php if ($seguranca) { ?>
-
         <h1>Bem vindo,
             <?php echo $_SESSION['nome_multiplicador']; ?> ao painel do site!
         </h1>
@@ -20,11 +22,14 @@ require_once "functions.php";
         <?php include "layout/menuMultiplicador.php"; ?>
 
         <?php
+         // Define a tabela e a ordem para a consulta
             $tabela = "usuarios";
             $order = "nome_multiplicador";
+            // Busca os usuários no banco de dados
             $usuarios = buscar($connect, $tabela, $where = 1, $order);
+            // Insere um novo multiplicador
             inserirMultiplicador($connect);
-           
+           // Verifica se um ID de multiplicador foi fornecido via GET
             if (isset($_GET['id_multiplicador'])){ ?>
                 <h2>Tem certeza que deseja deletar o Multiplicador 
                 <?php echo $_GET['nome_multiplicador'];?></h2>
@@ -44,8 +49,6 @@ require_once "functions.php";
             
             ?>
             
-         
-
         <!-- Tabela de usuários -->
         <div class="container">
             <table border="1">
@@ -74,6 +77,8 @@ require_once "functions.php";
                             <td><?php echo $usuario['status_multiplicador']; ?></td>
                             <td>
                                 <a href="multiplicadores.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Excluir</a>
+                                |
+                                <a href="editarMultiplicador.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Atualizar</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
