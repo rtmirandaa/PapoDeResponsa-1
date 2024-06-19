@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+require_once "functions.php";
+
+// Chama a função de inserção de multiplicador
+inserirMultiplicador($connect);
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,67 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Cadastro</title>
     <link rel="stylesheet" href="style.css">
-    <!-- <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-            text-align: center;
-        }
-        main {
-            padding: 20px;
-        }
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #f4f4f4;
-            padding: 20px;
-            border-radius: 5px;
-        }
-        h2 {
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #555;
-        }
-    </style> -->
+
 </head>
 <body>
     <header>
@@ -73,7 +22,9 @@
     </header>
     
     <main>
-        <form id="signup-form">
+        
+                  <!-- Formulário para Cadastrar novo Multiplicador -->
+        <form id="signup-form" action="" method="post">
             <h2>Cadastro do Multiplicador</h2>
             <div class="form-group">
                 <label for="name">Nome:</label>
@@ -84,41 +35,33 @@
                 <input type="email" id="email" name="email_multiplicador" required>
             </div>
             <div class="form-group">
-                <label for="registration">Matrícula:</label>
-                <input type="text" id="registration" name="matricula" required>
+                <label for="matricula">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" required>
             </div>
             <div class="form-group">
-                <label for="registration">CPF:</label>
-                <input type="text" id="registration" name="cpf_multiplicador" required>
+                <label for="cpf_multiplicador">CPF:</label>
+                <input type="text" id="cpf_multiplicador" name="cpf_multiplicador" required>
             </div>
             <div class="form-group">
-                <label for="registration">Endereco:</label>
-                <input type="text" id="registration" name="endereco_multiplicador" required>
+                <label for="endereco_multiplicador">Endereco:</label>
+                <input type="text" id="endereco_multiplicador" name="endereco_multiplicador" required>
             </div>
             <div class="form-group">
-                <label for="registration">Senha:</label>
-                <input type="text" id="registration" name="senha_multiplicador" required>
+                <label for="senha_multiplicador">Senha:</label>
+                <input type="password" id="senha_multiplicador" name="senha_multiplicador" required>
             </div>
             <div class="form-group">
-                <label for="registration">Repete Senha:</label>
-                <input type="text" id="registration" name="repete_senha" required>
+                <label for="repete_senha">Repita a Senha:</label>
+                <input type="password" id="repete_senha" name="repete_senha" required>
             </div>
-
-
-                      <!-- Formulário para Cadastrar novo Multiplicador -->
-        <!-- <form action="" method="post">
-            <fieldset>
-                <legend>Cadastrar Multiplicador</legend>
-                <input type="text" name="nome_multiplicador" placeholder="nome">
-                <input type="email" name="email_multiplicador" placeholder="email">
-                <input type="text" name="matricula" placeholder="Matricula">
-                <input type="text" name="cpf_multiplicador" placeholder="CPF">
-                <input type="text" name="endereco_multiplicador" placeholder="Endereço">
-                <input type="password" name="senha_multiplicador" placeholder="senha">
-                <input type="password" name="repete_senha" placeholder="Confirme sua senha">
-                <input type="submit" name="cadastrar" value="Cadastrar">
-            </fieldset>
-        </form> -->
+            <div class="form-group">
+            <label for="nivel_hierarquia">Nível de Hierarquia:</label>
+            <select id="nivel_hierarquia" name="nivel_hierarquia" required>
+                <option value="padrao">Padrão</option>
+                <option value="trainee">Trainee</option>
+                <option value="administrador">Administrador</option>
+            </select>
+            </div>
             <button type="submit" name="cadastrar" value="Cadastrar">Cadastrar</button>
         </form>
         <a href="logout.php">Sair</a>

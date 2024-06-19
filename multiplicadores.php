@@ -30,7 +30,7 @@ require_once "functions.php";
             // Insere um novo multiplicador
             inserirMultiplicador($connect);
            // Verifica se um ID de multiplicador foi fornecido via GET
-            if (isset($_GET['id_multiplicador'])){ ?>
+           if (isset($_GET['id_multiplicador']) && $_SESSION['nivel_hierarquia'] == 'administrador'){ ?>
                 <h2>Tem certeza que deseja deletar o Multiplicador 
                 <?php echo $_GET['nome_multiplicador'];?></h2>
                 <form action="" method="post">
@@ -39,11 +39,11 @@ require_once "functions.php";
                 </form>
             <?php } ?>
             <?php 
-                if(isset($_POST['deletar'])){
+                if(isset($_POST['deletar']) && $_SESSION['nivel_hierarquia'] == 'administrador'){
                     if ($_SESSION['id_multiplicador'] != $_POST['id_multiplicador']){
-                    deletar($connect, "multiplicador",$_POST['id_multiplicador']);
+                        deletar($connect, "multiplicador",$_POST['id_multiplicador']);
                     } else{
-                        echo "Vocee não pode deletar seu próprio usário!";
+                        echo "Você não pode deletar seu próprio usuário!";
                     }
                 }
             
@@ -61,6 +61,7 @@ require_once "functions.php";
                         <th>CPF</th>
                         <th>Endereço</th>
                         <th>Status</th>
+                        <th>Cargo</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -75,10 +76,13 @@ require_once "functions.php";
                             <td><?php echo $usuario['cpf_multiplicador']; ?></td>
                             <td><?php echo $usuario['endereco_multiplicador']; ?></td>
                             <td><?php echo $usuario['status_multiplicador']; ?></td>
+                            <td><?php echo $usuario['nivel_hierarquia']; ?></td>
                             <td>
-                                <a href="multiplicadores.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Excluir</a>
-                                |
-                                <a href="editarMultiplicador.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Atualizar</a>
+                                <?php if ($_SESSION['nivel_hierarquia'] == 'administrador') : ?>
+                                        <a href="multiplicadores.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Excluir</a>
+                                        |
+                                        <a href="editarMultiplicador.php?id_multiplicador=<?php echo $usuario['id_multiplicador']; ?>&nome_multiplicador=<?php echo $usuario['nome_multiplicador']; ?>">Atualizar</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -118,7 +122,14 @@ require_once "functions.php";
                 <label for="repete_senha">Repita a Senha:</label>
                 <input type="password" id="repete_senha" name="repete_senha" required>
             </div>
-
+            <div class="form-group">
+            <label for="nivel_hierarquia">Nível de Hierarquia:</label>
+            <select id="nivel_hierarquia" name="nivel_hierarquia" required>
+                <option value="padrao">Padrão</option>
+                <option value="trainee">Trainee</option>
+                <option value="administrador">Administrador</option>
+            </select>
+            </div>
             <button type="submit" name="cadastrar" value="Cadastrar">Cadastrar</button>
         </form>
 

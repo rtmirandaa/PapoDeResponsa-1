@@ -44,6 +44,7 @@ function login($connect)
                 $_SESSION['email_multiplicador'] = $usuario['email_multiplicador'];
                 $_SESSION['nome_multiplicador'] = $usuario['nome_multiplicador'];
                 $_SESSION['id_multiplicador'] = $usuario['id_multiplicador'];
+				$_SESSION['nivel_hierarquia'] = $usuario['nivel_hierarquia']; 
                 $_SESSION['ativa'] = true;
                 header("location: indexMultiplicador.php"); // Redireciona para a página de administração
                 exit;
@@ -87,7 +88,7 @@ function loginSolicitante($connect)
                 $_SESSION['responsavel'] = $usuario['responsavel'];
                 $_SESSION['id'] = $usuario['id'];
                 $_SESSION['ativa'] = true;
-                header("location: solicitante.php"); // Redireciona para a página de administração
+                header("location: solicitante.php"); // Redireciona para a página de administração do solicitante
                 exit;
             } else {
                 echo '<label style="color: red; font-size: 2rem;">E-mail ou senha não encontrados!</label>';
@@ -156,6 +157,8 @@ function inserirMultiplicador($connect)
 		$cpf = mysqli_real_escape_string($connect, $_POST['cpf_multiplicador']);
 		$endereco = mysqli_real_escape_string($connect, $_POST['endereco_multiplicador']);
 		$senha = ($_POST['senha_multiplicador']);
+		$nivel_hierarquia = mysqli_real_escape_string($connect, $_POST['nivel_hierarquia']);
+
 
 		if ($_POST['senha_multiplicador'] != $_POST['repete_senha']) {
 			$erros[] = "Senhas não conferem";
@@ -182,13 +185,34 @@ function inserirMultiplicador($connect)
 		}
 
 		if (empty($erros)) {
-			$query = "INSERT INTO multiplicador (nome_multiplicador,email_multiplicador,senha_multiplicador,matricula,cpf_multiplicador,endereco_multiplicador) values ('$nome','$email','$senha','$matricula','$cpf','$endereco')";
-			$executar = mysqli_query($connect, $query);
-			if ($executar) {
-				echo "multiplicador inserido com sucesso";
+			$query = "INSERT INTO multiplicador (nome_multiplicador,email_multiplicador,senha_multiplicador,matricula,cpf_multiplicador,endereco_multiplicador,nivel_hierarquia) 
+			values ('$nome','$email','$senha','$matricula','$cpf','$endereco', '$nivel_hierarquia')";
+
+			if (mysqli_query($connect, $query)) {
+				// Verifica o nível de hierarquia do usuário logado
+				if ($_SESSION['nivel_hierarquia'] == 'administrador') {
+					// Administrador
+					echo "<script>
+							alert('Novo multiplicador cadastrado com sucesso.');
+							window.location.href = 'multiplicadores.php'; // Redireciona para o painel do administrador
+						</script>";
+				} else {
+					// Outros multiplicadores
+					echo "<script>
+							alert('Seu pedido foi enviado para revisão.');
+							window.location.href = 'index.php'; // Redireciona para o index
+						</script>";
+				}
 			} else {
-				echo "Erro ao inserir multiplicador!";
+				echo "Erro ao cadastrar usuário: " . mysqli_error($connect);
 			}
+
+			// $executar = mysqli_query($connect, $query);
+			// if ($executar) {
+			// 	echo "multiplicador inserido com sucesso";
+			// } else {
+			// 	echo "Erro ao inserir multiplicador!";
+			// }
 		} else {
 			foreach ($erros as $erro) {
 				echo "<p>$erro</p>";
@@ -205,6 +229,8 @@ function updateMultiplicador($connect)
 		$email_multiplicador = filter_input(INPUT_POST, 'email_multiplicador', FILTER_VALIDATE_EMAIL);
 		$nome = mysqli_real_escape_string($connect, $_POST['nome_multiplicador']);
 		$matricula = mysqli_real_escape_string($connect, $_POST['matricula']);
+		$nivel_hierarquia = mysqli_real_escape_string($connect, $_POST['nivel_hierarquia']);
+		$status = mysqli_real_escape_string($connect, $_POST['status_multiplicador']);
 		$senha = "";
 
 		if (strlen($nome) < 3) {
@@ -236,11 +262,22 @@ function updateMultiplicador($connect)
 
 		if (empty($erros)) {
 			if (!empty($senha)) {
-				$query = "UPDATE multiplicador set nome_multiplicador = '$nome', matricula = '$matricula', email_multiplicador = '$email_multiplicador', senha_multiplicador = '$senha' 
-			where id_multiplicador =" . (int) $id_multiplicador;
+				$query = "UPDATE multiplicador SET 
+                            nome_multiplicador='$nome', 
+                            email_multiplicador='$email_multiplicador', 
+                            matricula='$matricula', 
+                            senha_multiplicador='$senha', 
+                            nivel_hierarquia='$nivel_hierarquia', 
+                            status_multiplicador='$status' 
+                          WHERE id_multiplicador='$id_multiplicador'";
 			} else {
-				$query = "UPDATE multiplicador set nome_multiplicador = '$nome', matricula = '$matricula', email_multiplicador = '$email_multiplicador'
-			where id_multiplicador =" . (int) $id_multiplicador;
+				$query = "UPDATE multiplicador SET 
+                            nome_multiplicador='$nome', 
+                            email_multiplicador='$email_multiplicador', 
+                            matricula='$matricula', 
+                            nivel_hierarquia='$nivel_hierarquia', 
+                            status_multiplicador='$status' 
+                          WHERE id_multiplicador='$id_multiplicador'";
 			}
 
 			$executar = mysqli_query($connect, $query);
@@ -268,7 +305,10 @@ function deletar($connect, $usuario, $id_multiplicador)
 		$query = "DELETE FROM $usuario WHERE id_multiplicador =" . (int) $id_multiplicador;
 		$execute = mysqli_query($connect, $query);
 		if ($execute) {
-			echo "Dado deletado com sucesso!";
+			echo "<script>
+							alert('Multiplicador deletado com sucesso.');
+							window.location.href = 'multiplicadores.php';
+				</script>";
 		} else {
 			echo "Erro ao deletar!";
 		}
