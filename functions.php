@@ -56,8 +56,6 @@ function login($connect)
         }
     }
 }
-
-
 function loginSolicitante($connect)
 {
     if (isset($_POST['acessar'])) {
@@ -229,6 +227,8 @@ function updateMultiplicador($connect)
 		$email_multiplicador = filter_input(INPUT_POST, 'email_multiplicador', FILTER_VALIDATE_EMAIL);
 		$nome = mysqli_real_escape_string($connect, $_POST['nome_multiplicador']);
 		$matricula = mysqli_real_escape_string($connect, $_POST['matricula']);
+		$cpf= mysqli_real_escape_string($connect, $_POST['cpf_multiplicador']);
+		$endereco= mysqli_real_escape_string($connect, $_POST['endereco_multiplicador']);
 		$nivel_hierarquia = mysqli_real_escape_string($connect, $_POST['nivel_hierarquia']);
 		$status = mysqli_real_escape_string($connect, $_POST['status_multiplicador']);
 		$senha = "";
@@ -265,7 +265,9 @@ function updateMultiplicador($connect)
 				$query = "UPDATE multiplicador SET 
                             nome_multiplicador='$nome', 
                             email_multiplicador='$email_multiplicador', 
-                            matricula='$matricula', 
+                            matricula='$matricula',
+							cpf_multiplicador='$cpf', 
+               				endereco_multiplicador='$endereco',
                             senha_multiplicador='$senha', 
                             nivel_hierarquia='$nivel_hierarquia', 
                             status_multiplicador='$status' 
@@ -275,6 +277,8 @@ function updateMultiplicador($connect)
                             nome_multiplicador='$nome', 
                             email_multiplicador='$email_multiplicador', 
                             matricula='$matricula', 
+							cpf_multiplicador='$cpf', 
+               				endereco_multiplicador='$endereco', 
                             nivel_hierarquia='$nivel_hierarquia', 
                             status_multiplicador='$status' 
                           WHERE id_multiplicador='$id_multiplicador'";
@@ -313,4 +317,65 @@ function deletar($connect, $usuario, $id_multiplicador)
 			echo "Erro ao deletar!";
 		}
 	}
+}
+
+
+// Buscar solicitações disponíveis
+function buscarSolicitacoesDisponiveis($connect) {
+    $query = "SELECT s.*, sl.endereco_solicitante FROM solicitacao s
+              INNER JOIN solicitante sl ON s.id_solicitante = sl.id_solicitante
+              WHERE s.id_multiplicador IS NULL AND s.status_solicitacao = 'A'";
+    $result = mysqli_query($connect, $query);
+    $solicitacoes = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $solicitacoes;
+}
+
+// Buscar solicitações aceitas
+function buscarSolicitacoesAceitas($connect, $id_multiplicador) {
+    $query = "SELECT s.*, sl.endereco_solicitante FROM solicitacao s
+              INNER JOIN solicitante sl ON s.id_solicitante = sl.id_solicitante
+              WHERE s.id_multiplicador = $id_multiplicador AND s.status_solicitacao = 'A'";
+    $result = mysqli_query($connect, $query);
+    $solicitacoes = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return $solicitacoes;
+}
+
+// Aceitar uma solicitação
+function aceitarSolicitacao($connect, $id_solicitacao, $id_multiplicador) {
+    $query = "UPDATE solicitacao SET id_multiplicador = $id_multiplicador WHERE id_solicitacao = $id_solicitacao";
+    $result = mysqli_query($connect, $query);
+    if ($result) {
+        header("Location: indexMultiplicador.php");
+        exit;
+    } else {
+        echo "Erro ao aceitar solicitação.";
+    }
+}
+
+// Desistir de uma solicitação
+function desistirSolicitacao($connect, $id_solicitacao, $id_multiplicador) {
+    $query = "UPDATE solicitacao SET id_multiplicador = NULL WHERE id_solicitacao = $id_solicitacao AND id_multiplicador = $id_multiplicador";
+    $result = mysqli_query($connect, $query);
+    if ($result) {
+        header("Location: indexMultiplicador.php");
+        exit;
+    } else {
+        echo "Erro ao desistir da solicitação.";
+    }
+}
+
+function buscarEnderecoMultiplicador($connect, $id_multiplicador) {
+    $query = "SELECT endereco_multiplicador FROM multiplicador
+              WHERE id_multiplicador = $id_multiplicador";
+    $result = mysqli_query($connect, $query);
+    
+    // Verifique se a consulta retornou algum resultado
+    if ($result && mysqli_num_rows($result) > 0) {
+        // Obtenha a primeira linha do resultado
+        $row = mysqli_fetch_assoc($result);
+        return $row['endereco_multiplicador'];
+    } else {
+        // Retorne null ou um valor padrão se nenhum resultado for encontrado
+        return null;
+    }
 }

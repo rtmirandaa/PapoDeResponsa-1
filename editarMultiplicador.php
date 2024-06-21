@@ -43,6 +43,9 @@ require_once "functions.php";
                 <input value="<?php echo $usuario['nome_multiplicador']; ?>" type="text" name="nome_multiplicador" placeholder="nome">
                 <input value="<?php echo $usuario['email_multiplicador']; ?>" type="email" name="email_multiplicador" placeholder="email">
                 <input value="<?php echo $usuario['matricula']; ?>" type="text" name="matricula" placeholder="matricula">
+                <input value="<?php echo $usuario['cpf_multiplicador']; ?>" type="text" name="cpf_multiplicador" placeholder="CPF">
+                <input value="<?php echo $usuario['endereco_multiplicador']; ?>" type="text" name="endereco_multiplicador" placeholder="Endereço">
+                <br>
                 <input type="password" name="senha_multiplicador" placeholder="senha">
                 <input type="password" name="repetesenha" placeholder="Confirme sua senha">
                 <!-- Campo para nível hierárquico -->

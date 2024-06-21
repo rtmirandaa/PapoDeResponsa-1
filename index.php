@@ -1,43 +1,72 @@
-<?php require_once "functions.php"; 
-if(isset($_POST['acessar'])){
-    login($connect);
-    loginSolicitante($connect);
-}
-?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Acesso ao site</title>
+    <title>Papo de Responsa</title>
+    <!-- Importar a fonte Merriweather do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Link para o arquivo CSS externo -->
+    <link rel="stylesheet" href="style/home.css">
+    <link rel="icon" href="/imgs/icon2.png">
 </head>
 <body>
-    <form action="" method="post">
-        <fieldset>
-        <legend>Painel de login Multiplicador</legend>
-        <input type="email" name="email_multiplicador" placeholder="informe seu e-mail" required>
+    <header>
+        <nav class="nav-left">
+            <img src="style/papoLogo.jfif" alt="Logo Papo de Responsa" class="logo">
+        </nav>
+        <nav class="nav-center">
+            <h1>Papo de Responsa</h1>
+            <ul>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#oque-fazemos">O que fazemos</a></li>
+                <li><a href="#como-ajudar">Como ajudar</a></li>
+                <li><a href="#fique-por-dentro">Fique por dentro</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+        <nav class="nav-right">
+            <a href="login.php">Login</a>
+        </nav>
+    </header>
+    <main>
+        <section class="main-left">
+            <div class="info-box" id="sobre">
+                <h2>"Papo de Responsa"</h2>
+                <p>Papo de Responsa é um programa de prevenção da Polícia Civil do Estado do Rio Grande do Sul, que tem como objetivo a interlocução com adolescentes e jovens. Seu principal espaço de atuação é junto às escolas de ensino fundamental e médio, públicas ou privadas, na promoção de um papo, um diálogo descontraído sobre prevenção às drogas, violência, bullying, suicídio, escolhas de vida, papel do policial na sociedade, entre outros assuntos.</p>
+                <p>Prevenção é a nossa missão!</p>
+            </div>
+            <div class="info-box" id="oque-fazemos">
+                <h2>O que fazemos?</h2>
+                <p>Nosso trabalho, enquanto principal programa de prevenção da PCRS, visa dialogar com três pilares da sociedade, professores, alunos e pais. Mas isso de forma a oferecer uma abordagem integral na resolução de alguns dos maiores desafios da nossa sociedade, a quebra de paradigmas através da educação. Acreditamos que é dando voz aos nossos interlocutores que iremos aumentar seu nível de consciência acerca da importância da transformação da visão de futuro, tornando-os protagonistas das próprias histórias.</p>
+                <p>Com esta iniciativa, o objetivo do programa é promover grandes mudanças na mentalidade da juventude. Com isso, o jovem reflete sobre suas habilidades e ganha a confiança que precisa para atingir todo seu potencial. Saiba mais sobre o nosso trabalho entrando em contato com nossa equipe ainda hoje.</p>
+            </div>
+            <div class="info-box" id="como-ajudar">
+                <h2>Como você pode ajudar?</h2>
+                <p>Visando sempre dialogar sobre assuntos importantes através de um bate-papo informal e descontraído com os alunos, na busca pela construção de um futuro em que a palavra e o diálogo sejam as principais armas contra a violência, de qualquer natureza.</p>
+            </div>
+            <div class="info-box" id="fique-por-dentro">
+                <h2>Fique por dentro</h2>
+                <p>Siga-nos nas redes sociais e acompanhe nossas notícias, eventos e iniciativas:</p>
+                <ul>
+                    <li>Facebook</li>
+                    <li>Instagram</li>
+                    <li>Twitter</li>
+                </ul>
+            </div>
+        </section>
 
-        <input type="password" name="senha_multiplicador" placeholder="insira sua senha" required>
+    </main>
+    <footer id="contato">
+        <p>Seja parte da mudança! Juntos podemos construir um mundo mais justo e solidário.</p>
+        <p>Contato: papoderesponsa@pc.rs.gov.br | (51) 98595-5886</p>
+    </footer>
 
-        <input type="submit" name="acessar" value="Acessar">
-        </fieldset>
-    </form>
+    <!-- Ícone -->
+    <div class="icon-container">
+        <img src="/imgs/icone.png" alt="Ícone" class="icon">
+    </div>
 
-    <?php
-
-    ?>
-    <form action="" method="post">
-        <fieldset>
-        <legend>Painel de login Solicitante</legend>
-        
-        <input type="email" name="email_solicitante" placeholder="informe seu e-mail" required>
-
-        <input type="password" name="senha" placeholder="insira sua senha" required>
-
-        <input type="submit" name="acessar" value="Acessar">
-        </fieldset>
-    </form>
-    <a href="CadastroSolicitante.php">Cadastrar Solicitante</a>
-    <a href="CadastroMultiplicador.php">Cadastrar Multiplicador</a>
+    <script src="script.js"></script>
 </body>
 </html>

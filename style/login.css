@@ -1,0 +1,126 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+}
+
+
+
+#login {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.name input {
+    border-radius: 15px;
+    border: none;
+    width: 250px;
+    height: 40px;
+    padding-left: 15px;
+    background-color: #000000;
+    color: #b6b6b6;
+    margin-bottom: 15px;
+}
+.caixa:first-child {
+    margin-right: 20px; /* Espaçamento entre as caixas de login */
+}
+
+.email input {
+    border-radius: 15px;
+    border: none;
+    width: 250px;
+    height: 40px;
+    padding-left: 15px;
+    background-color: #1e1c2e;
+    color: #b6b6b6;
+}
+
+.logo {
+    max-width: 200px; /* Ajuste conforme o tamanho da sua imagem */
+    height: auto;
+}
+
+.senha input {
+    border-radius: 15px;
+    border: none;
+    width: 250px;
+    height: 40px;
+    padding-left: 15px;
+    background-color: #1e1c2e;
+    color: #b6b6b6;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.pclogo {
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.entrar input {
+    cursor: pointer;
+    width: 120px;
+    height: 40px;
+    border-radius: 30px;
+    border: none;
+    background-color: rgb(134, 243, 134);
+    color: #000000;
+}
+
+.entrar input[type="submit"]:hover {
+    background-color: #58f000; /* Cor de fundo alterada no hover */
+    color: #000000; /* Cor do texto alterada no hover */
+}
+
+form {
+    max-width: 400px; /* Largura máxima do formulário para evitar que ele fique muito largo */
+    margin: 0 auto; /* Centraliza o formulário dentro do contêiner */
+}
+
+input::placeholder {
+    color: #b6b6b6;
+}
+
+h1 {
+    color: #FAFAFA;
+}
+
+a {
+    color: white; 
+    text-decoration: none; 
+    display: block; /* Faz o link ocupar toda a largura disponível */
+    margin-top: 10px; /* Espaçamento acima do link */
+}
+
+a:hover {
+    color:  #58f000; /* Cor do texto alterada no hover */
+}
+
+.caixa {
+    padding: 20px;
+    margin-right: 100px; /* Espaçamento acima do link */
+    margin-left: 100px; /* Espaçamento acima do link */
+    width: 300px; /* Largura da caixa de login */
+    background-color: #333333;
+}
+
+.caixa img {
+    width: 115px;
+   
+}
+
+input:focus {
+    outline: none;
+}
