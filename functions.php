@@ -58,7 +58,7 @@ function login($connect)
 }
 function loginSolicitante($connect)
 {
-    if (isset($_POST['acessar'])) {
+    if (isset($_POST['acessar_solicitante'])) {
         $check_email = filter_input(INPUT_POST, 'email_solicitante', FILTER_VALIDATE_EMAIL);
         if ($check_email === false) {
             echo '<label style="color: red; font-size: 2rem;">E-mail inválido!</label>';
@@ -66,7 +66,7 @@ function loginSolicitante($connect)
         }
         $email = mysqli_real_escape_string($connect, $check_email);
         ########### verificar ###################################
-        $senha = mysqli_real_escape_string($connect, $_POST['senha']);
+        $senha = mysqli_real_escape_string($connect, $_POST['senha_solicitante']);
 
         if (!empty($email) && !empty($senha)) {
             $query = "SELECT * FROM solicitante WHERE email_solicitante = '$email' AND senha_solicitante = '$senha'";
@@ -175,6 +175,21 @@ function inserirMultiplicador($connect)
 			$erros[] = "Matrícula já cadastrada!";
 		}
 
+    if (strlen($matricula) < 7) {
+        $erros[] = "Tamanho da matrícula inferior a 7 caracteres";
+    }
+    if (strlen($matricula) > 7) {
+        $erros[] = "Tamanho da matrícula deve ser no máximo de 7 caracteres";
+    }
+
+    if (strlen($cpf) != 11) {
+        $erros[] = "Tamanho do CPF inválido";
+    }
+
+    if (strlen($senha) < 8) {
+        $erros[] = "Tamanho da senha deve ser de no mínimo 8 caracteres";
+    }
+			
 		$queryCpf = "SELECT cpf_multiplicador FROM multiplicador WHERE cpf_multiplicador = '$cpf' ";
 		$buscaCpf = mysqli_query($connect, $queryCpf);
 		$verificaCpf = mysqli_num_rows($buscaCpf);
@@ -205,12 +220,6 @@ function inserirMultiplicador($connect)
 				echo "Erro ao cadastrar usuário: " . mysqli_error($connect);
 			}
 
-			// $executar = mysqli_query($connect, $query);
-			// if ($executar) {
-			// 	echo "multiplicador inserido com sucesso";
-			// } else {
-			// 	echo "Erro ao inserir multiplicador!";
-			// }
 		} else {
 			foreach ($erros as $erro) {
 				echo "<p>$erro</p>";
@@ -378,4 +387,39 @@ function buscarEnderecoMultiplicador($connect, $id_multiplicador) {
         // Retorne null ou um valor padrão se nenhum resultado for encontrado
         return null;
     }
+}
+
+
+function deletarSolicitacao($connect, $usuario, $id_solicitacao)
+{
+	if (!empty($id_solicitacao)) {
+		$query = "DELETE FROM $usuario WHERE id_solicitacao =" . (int) $id_solicitacao;
+		$execute = mysqli_query($connect, $query);
+		if ($execute) {
+			echo "<script>
+							alert('Solicitacao deletado com sucesso.');
+							window.location.href = 'gerenciarSolicitacoes.php';
+				</script>";
+		} else {
+			echo "Erro ao deletar!";
+		}
+	}
+}
+
+function buscarSolicitacao($connect, $tabela, $where = 1, $order = "")
+{
+	if (!empty($order)) {
+		$order = "ORDER BY $order";
+	}
+	$query = "
+	SELECT s.id_solicitacao, s.id_solicitante, so.nome_instituicao, s.id_multiplicador, m.nome_multiplicador, 
+		   s.data_criacao, s.descricao, s.status_solicitacao
+	FROM solicitacao s
+    JOIN solicitante so ON s.id_solicitante = so.id_solicitante
+    LEFT JOIN multiplicador m ON s.id_multiplicador = m.id_multiplicador
+	WHERE $where $order
+	";
+	$execute = mysqli_query($connect, $query);
+	$results = mysqli_fetch_all($execute, MYSQLI_ASSOC);
+	return $results;
 }

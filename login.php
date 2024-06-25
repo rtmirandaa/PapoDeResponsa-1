@@ -54,10 +54,10 @@ if(isset($_POST['acessar'])){
                     <input type="email" name="email_solicitante" placeholder="informe seu e-mail" required>
                 </div>
                 <div class="senha">
-                    <input type="password" name="senha" placeholder="insira sua senha" required>
+                    <input type="password" name="senha_solicitante" placeholder="insira sua senha" required>
                 </div>
                 <div class="entrar">
-                    <input type="submit" name="acessar" value="Acessar">
+                    <input type="submit" name="acessar_solicitante" value="Acessar">
                 </div>
                 <a href="CadastroSolicitante.php">Cadastrar Solicitante</a>
                 </fieldset>

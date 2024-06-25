@@ -11,14 +11,21 @@ require_once "functions.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel admin - multiplicadores</title>
+    <link rel="stylesheet" href="style/adm.css">
 </head>
 <body>
+    
     <!-- Se $seguranca é TRUE, exibe o conteúdo protegido -->
     <?php if ($seguranca) { ?>
+        <header>
+
         <h1>Bem vindo,
             <?php echo $_SESSION['nome_multiplicador']; ?> ao painel do site!
         </h1>
-
+        <nav class="nav-left">
+            <img src="style/papoLogo.jfif" alt="Logo Papo de Responsa" class="logo">
+        </nav>
+        </header>
         <?php include "layout/menuMultiplicador.php"; ?>
 
         <?php
@@ -70,7 +77,7 @@ require_once "functions.php";
                     <?php foreach ($usuarios as $usuario) : ?>
                         <tr>
                             <td><?php echo $usuario['id_multiplicador']; ?></td>
-                            <td><?php echo $usuario['nome_multiplicador']; ?></td>
+                            <td data-tooltip="<?php echo $usuario['nome_multiplicador']; ?>"><?php echo $usuario['nome_multiplicador']; ?></td>
                             <td><?php echo $usuario['email_multiplicador']; ?></td>
                             <td><?php echo $usuario['matricula']; ?></td>
                             <td><?php echo $usuario['cpf_multiplicador']; ?></td>
