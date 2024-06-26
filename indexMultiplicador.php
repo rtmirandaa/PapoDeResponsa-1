@@ -47,7 +47,36 @@ $solicitacoes_aceitas = buscarSolicitacoesAceitas($connect, $_SESSION['id_multip
                     echo $solicitacao['descricao']; ?> - Solicitante: <?php echo $solicitacao['endereco_solicitante']; ?> - Distância: <?php echo $distancia;?>
                     <a href="?aceitar=<?php echo $solicitacao['id_solicitacao']; ?>">Aceitar</a>
                 </li>
-            <?php endforeach; ?>
+                function print_distancia
+            <?php endforeach; 
+            try {
+                // Criar a conexão com o banco de dados usando PDO
+                $connect = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+                // Configurar o PDO para lançar exceções em caso de erro
+                $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+                // Preparar e executar a consulta SQL
+                $stmt = $connect->prepare("SELECT id_multiplicador FROM solicitacao");
+                $stmt->execute();
+            
+                // Obter os resultados e armazenar em uma lista
+                $idList = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            
+                // Exibir a lista de IDs (para fins de demonstração)
+                print_r($idList);
+            
+            } catch(PDOException $e) {
+                echo "Erro: " . $e->getMessage();
+            }
+            function print_distancia ($distancia){
+                for ($i = 0; $i < strlen($idList); $i++)
+                {
+                    $id = $idList[$i];
+                    echo $id . " - " . $distancia[$i] . "<br>";
+                }
+            }
+            
+            ?>
         </ul>
 
         <h2>Solicitações Aceitas por Você</h2>
@@ -63,3 +92,5 @@ $solicitacoes_aceitas = buscarSolicitacoesAceitas($connect, $_SESSION['id_multip
     <?php }  ?>
 </body>
 </html>
+
+
